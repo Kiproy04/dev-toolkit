@@ -23,7 +23,7 @@ git clone https://github.com/YOUR_USERNAME/dev-toolkit.git
 cd dev-toolkit
 chmod +x install.sh
 ./install.sh
-source ~/.bashrc   # or source ~/.zshrc
+source ~/.bashrc   
 ```
 
 That's it. All scripts are installed to `~/.my_scripts` and added to your `PATH`.
