@@ -1,6 +1,6 @@
 # 🛠️ Dev Toolkit
 
-![CI](https://github.com/YOUR_USERNAME/dev-toolkit/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/Kiproy04/dev-toolkit/actions/workflows/ci.yml/badge.svg)
 
 A collection of personal bash scripts to speed up everyday dev workflows — Git pushing, Python environment setup, and script management — all in one place.
 
