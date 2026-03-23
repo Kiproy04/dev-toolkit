@@ -33,8 +33,8 @@ list_scripts() {
   for f in "$SCRIPTS_DIR"/*; do
     [ -f "$f" ] || continue
     name=$(basename "$f")
-    perms=$(ls -lh "$f" | awk '{print $1}')
-    size=$(ls -lh "$f" | awk '{print $5}')
+    perms=$(stat -c "%A" "$f")
+    size=$(stat -c "%s" "$f" | awk '{printf "%.1fK", $1/1024}')
     echo -e "  ${GREEN}▸${NC} $name  ${YELLOW}($size)${NC}  $perms"
     ((count++))
   done

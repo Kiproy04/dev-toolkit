@@ -14,7 +14,6 @@ SHELL_RC=""
 GREEN='\033[0;32m'
 CYAN='\033[0;36m'
 YELLOW='\033[1;33m'
-RED='\033[0;31m'
 BOLD='\033[1m'
 NC='\033[0m'
 
@@ -60,9 +59,11 @@ PATH_LINE="export PATH=\"\$HOME/.my_scripts:\$PATH\""
 if grep -qF "$PATH_LINE" "$SHELL_RC" 2>/dev/null; then
   echo -e "${YELLOW}⚠️  PATH already configured in $SHELL_RC — skipping.${NC}"
 else
-  echo "" >> "$SHELL_RC"
-  echo "# dev-toolkit scripts" >> "$SHELL_RC"
-  echo "$PATH_LINE" >> "$SHELL_RC"
+  {
+    echo ""
+    echo "# dev-toolkit scripts"
+    echo "$PATH_LINE"
+  } >> "$SHELL_RC"
   echo -e "${GREEN}✅ Added ~/.my_scripts to PATH in $SHELL_RC${NC}"
 fi
 
