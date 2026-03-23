@@ -1,0 +1,114 @@
+name: CI — Lint Scripts
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["main", "master"]
+
+jobs:
+  shellcheck:
+    name: ShellCheck
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repo
+        uses: actions/checkout@v4
+
+      - name: 🔧 Install ShellCheck
+        run: sudo apt-get install -y shellcheck
+
+      - name: 🔍 Lint all scripts
+        run: |
+          echo "Running ShellCheck on all scripts..."
+          FAILED=0
+
+          for script in scripts/*; do
+            if [ -f "$script" ]; then
+              echo ""
+              echo "── Checking: $script"
+              if shellcheck "$script"; then
+                echo "✅ $script passed"
+              else
+                echo "❌ $script failed"
+                FAILED=1
+              fi
+            fi
+          done
+
+          # Also check install.sh
+          echo ""
+          echo "── Checking: install.sh"
+          if shellcheck install.sh; then
+            echo "✅ install.sh passed"
+          else
+            echo "❌ install.sh failed"
+            FAILED=1
+          fi
+
+          echo ""
+          if [ "$FAILED" -eq 1 ]; then
+            echo "❌ One or more scripts failed ShellCheck."
+            exit 1
+          else
+            echo "🎉 All scripts passed ShellCheck!"
+          fi
+
+  validate-structure:
+    name: Validate Repo Structure
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repo
+        uses: actions/checkout@v4
+
+      - name: 📁 Check required files exist
+        run: |
+          FAILED=0
+          REQUIRED=(
+            "README.md"
+            "install.sh"
+            "CHANGELOG.md"
+            "scripts/pushgit"
+            "scripts/venvstart"
+            "scripts/myscripts"
+            "demos/pushgit-demo.md"
+            "demos/venvstart-demo.md"
+            "demos/myscripts-demo.md"
+          )
+
+          echo "Checking required files..."
+          for file in "${REQUIRED[@]}"; do
+            if [ -f "$file" ]; then
+              echo "  ✅ $file"
+            else
+              echo "  ❌ MISSING: $file"
+              FAILED=1
+            fi
+          done
+
+          echo ""
+          if [ "$FAILED" -eq 1 ]; then
+            echo "❌ One or more required files are missing."
+            exit 1
+          else
+            echo "✅ All required files present."
+          fi
+
+      - name: 🔐 Check scripts are executable
+        run: |
+          FAILED=0
+          for script in scripts/* install.sh; do
+            if [ -x "$script" ]; then
+              echo "  ✅ $script is executable"
+            else
+              echo "  ❌ $script is NOT executable"
+              FAILED=1
+            fi
+          done
+
+          if [ "$FAILED" -eq 1 ]; then
+            echo ""
+            echo "❌ Fix with: chmod +x scripts/* install.sh"
+            exit 1
+          fi
